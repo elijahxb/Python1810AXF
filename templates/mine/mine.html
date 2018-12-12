@@ -17,16 +17,18 @@
     <div class="mine">
         <div class="user-wrapper">
             <div class="user-img">
-                <img src="{% static 'mine/img/axf.png' %}" alt="">
+                <img src="/static/mine/img/{{ img | default:'axf.png' }}" alt="">
             </div>
             <div class="user-content">
                 <p>
                     <span class="glyphicon glyphicon-piggy-bank"></span>
-                    骑猪去上学
+                    <a href="{% url 'axf:login' %}">
+                        {{ name | default:'未登录' }}
+                    </a>
                 </p>
                 <p style="color: yellow">
                     <span class="glyphicon glyphicon-king"></span>
-                    超级VIP
+                    等级: {{ rank | default:'无等级' }}
                 </p>
 
                 <a class="register" href="{% url 'axf:register' %}">注册</a>
@@ -42,10 +44,11 @@
             <section>
                 <ul>
                     <li>
-                        <a href="#">
+                        <a href="{% url 'axf:orderlist' 0 %}">
                             <dl>
                                 <dt><i class="glyphicon glyphicon-link"></i></dt>
                                 <dd> 待付款 </dd>
+                                <span class="badge" style="background: red; color: white">{{ waitpay }}</span>
                             </dl>
                         </a>
                     </li>
@@ -53,6 +56,7 @@
                         <a href="#">
                             <dl>
                                 <dt><i class="glyphicon glyphicon-phone"></i></dt>
+                                <span class="badge" style="background: red; color: white">{{ paydone }}</span>
                                 <dd> 待收货 </dd>
                             </dl>
                         </a>
@@ -147,9 +151,13 @@
                     </li>
                 </ul>
             </section>
-            <section class="quit">
-                <a href="#"> 退出登录 </a>
-            </section>
+
+            {% if name %}
+                <section class="quit">
+                    <a href="{% url 'axf:logout' %}"> 退出登录 </a>
+                </section>
+            {% endif %}
+
         </div>
     </div>
 {% endblock %}

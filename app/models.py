@@ -121,3 +121,77 @@ class Goods(models.Model):
 
     class Meta:
         db_table = 'axf_goods'
+
+
+
+# 用户 模型类
+class User(models.Model):
+    # 邮箱登录
+    email = models.CharField(max_length=40, unique=True)
+    # 密码
+    password = models.CharField(max_length=256)
+    # 名字
+    name = models.CharField(max_length=40)
+    # 手机号
+    phone = models.CharField(max_length=20)
+    # 头像
+    img = models.CharField(max_length=40, default='axf.png')
+    # 等级
+    rank = models.IntegerField(default=1)
+    # 令牌
+    token = models.CharField(max_length=256)
+
+    class Meta:
+        db_table = 'axf_user'
+
+# 购物车　模型类
+class Cart(models.Model):
+    # 用户
+    user = models.ForeignKey(User)
+    # 商品
+    goods = models.ForeignKey(Goods)
+    # 商品个数
+    number = models.IntegerField()
+    # 是否选中
+    isselect = models.BooleanField(default=True)
+
+    # 选择颜色
+    # 选择内存
+    # 选择版本
+
+    class Meta:
+        db_table = 'axf_cart'
+
+
+
+# 订单 模型类
+# 一个用户 对应 多个订单 【用户主表， 订单从表(声明关系)】
+class Order(models.Model):
+    # 用户
+    user = models.ForeignKey(User)
+    # 创建时间
+    createtime = models.DateTimeField(auto_now_add=True)
+    # 状态
+    # -1 过期
+    # 0 未付款
+    # 1 已付款，未发货
+    # 2 已付款，已发货， 【快递】
+    # 3 已签收，未评价
+    # 4 已评价
+    status = models.IntegerField(default=0)
+    # 订单号
+    identifier= models.CharField(max_length=256)
+
+
+# 订单商品 模型类
+# 一个订单 对应 多个商品 【订单主表，订单商品从表(声明关系)】
+class OrderGoods(models.Model):
+    # 订单
+    order = models.ForeignKey(Order)
+    # 商品
+    goods = models.ForeignKey(Goods)
+    # 个数
+    number = models.IntegerField()  # 1
+    # 大小    # XL
+    # 颜色    # 白色
+    #
